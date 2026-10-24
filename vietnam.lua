@@ -1,5 +1,5 @@
 -- =========================================================================
--- ⚡ NICEVEX-VIETNAM HUB - ĐỒNG BỘ CHAT IN-GAME & THÔNG BÁO TIKTOK 🥚
+-- ⚡ NICEVEX-VIETNAM HUB - FIX CHUẨN HIỆN BẢNG THÔNG BÁO TIKTOK 🥚
 -- =========================================================================
 
 local CoreGui = game:GetService("CoreGui")
@@ -93,23 +93,6 @@ local function showAdminToast(senderName, messageText)
         end)
     end)
 end
-
--- Lắng nghe tất cả tin nhắn chat trong server để tự động bật bảng thông báo cho mọi người đang chạy script
-for _, player in ipairs(Players:GetPlayers()) do
-    player.Chatted:Connect(function(msg)
-        if player.Name == "Monkeynicehihi" or player.DisplayName == "Monkeynicehihi" then
-            showAdminToast(player.Name, msg)
-        end
-    end)
-end
-
-Players.PlayerAdded:Connect(function(player)
-    player.Chatted:Connect(function(msg)
-        if player.Name == "Monkeynicehihi" or player.DisplayName == "Monkeynicehihi" then
-            showAdminToast(player.Name, msg)
-        end
-    end)
-end)
 
 -- 3. Tạo bảng Tiện Ích (Server Hop & Tab Admin Chat độc quyền)
 local function CreateServerHopGUI()
@@ -347,7 +330,7 @@ local function CreateServerHopGUI()
             ChatScroll.CanvasSize = UDim2.new(0, 0, 0, UIList.AbsoluteContentSize.Y + 10)
         end
 
-        addLogMessage("Hệ Thống", "Admin Chat In-game đã sẵn sàng.")
+        addLogMessage("Hệ Thống", "Admin Chat đã sẵn sàng.")
 
         SendBtn.MouseButton1Click:Connect(function()
             if ChatBox.Text ~= "" then
@@ -356,7 +339,10 @@ local function CreateServerHopGUI()
                 
                 addLogMessage(senderName, content)
                 
-                -- Bắn thẳng vào khung chat ingame của Roblox để mọi người trong server cùng nhận được sự kiện
+                -- HIỆN BẢNG THÔNG BÁO TIKTOK LÊN NGAY LẬP TỨC KHI BẤM GỬI
+                showAdminToast(senderName, content)
+                
+                -- Bắn vào khung chat chung trong game
                 pcall(function()
                     game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(content, "All")
                 end)
@@ -465,3 +451,4 @@ task.spawn(function()
     task.wait(0.5)
     CreateServerHopGUI()
 end)
+
